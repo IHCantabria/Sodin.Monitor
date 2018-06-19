@@ -1,7 +1,8 @@
-# SODIN Web
+# SODIN Monitor
 
 SODIN is an operational system for flooding damages, able to collect damage information originated during and after flooding episodes on rivers and coast.
-SODIN Web is a web viewer that let the user locate and filter past events on a map and navigate through event's captured data on a user friendly timeline.
+SODIN Monitor is a operational process with three main goals: Detection, Management, and Analysis of events. After all processes have finished, results are
+saved on a database ready to be consumed by applications.
 
 ## Installation
 
@@ -11,24 +12,25 @@ SODIN Web is a web viewer that let the user locate and filter past events on a m
 mongorestore --archive= db/SodinBD/sodin.archive --host xxx.xxx.xxx.xxx:xxxx --nsFrom SodinBD.* --nsTo SodinBD.* --username xx --password xxx
 ```
 
-2.  Rename _config.example.json_ to _config.json_, and set connection properties
+2.  Rename _config.example.py_ to _config.py_, set connection properties and api keys values
 
 ```
-{  
-  "MongoDb": {
-    "connection": "yourConnectionString",
-    "name": "SodinBD"
-  }
-}
+# API Keys Microsoft Cognitive Services (AZURE) #
+COMPUTER_VISION_API_KEY = ''
+FACE_API_KEY = ''
+TEXT_API_KEY = ''
+
+# BD Connection #
+URI_MONGODB = ''
+# Temp Folder #
+RUTA_BASE_EJECUCIONES = ''
 ```
 
-3.  Install grunt: `npm install -g grunt-cli`
-4.  Run grunt task **build**
-5.  Publish the web on IIS in your server
+3.  Do the same for all config files ending with _example_
 
 ## Usage
 
-Use your regular browser and navigate to the web site
+Run **monitor_sodin.py** or/and **gestor_sodin.py**
 
 ## Contributing
 
@@ -40,9 +42,9 @@ Use your regular browser and navigate to the web site
 
 ## Built With
 
-- [Angular](https://angularjs.org/) - The web framework used
-- [Grunt](https://gruntjs.com) - Task manager
-- [Jasmine](https://jasmine.github.io/) - Testing framework
+- [Python](https://www.python.org/) - The operational system environment
+- [MongoDB](https://www.mongodb.com/) - The Database
+-
 
 ## Credits
 
@@ -54,6 +56,6 @@ Licensed under the GNU General Public License v3.0 - see the LICENSE.md file for
 
 At runtime it uses:
 
-- [Timelinejs3](https://github.com/fmaturel/angular-timelinejs3) - MIT License
-- [Leaflet](https://github.com/Leaflet/Leaflet) - [README.MD](https://github.com/Leaflet/Leaflet/blob/master/README.md)
-- [Chart.js](https://github.com/chartjs/Chart.js) - MIT License
+- [Cognitive Services](https://azure.microsoft.com/es-es/services/cognitive-services/)
+- [PyMongo](https://api.mongodb.com/python/current/)
+- [Twython](https://twython.readthedocs.io/en/latest/)

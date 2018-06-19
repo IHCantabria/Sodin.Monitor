@@ -22,6 +22,7 @@ COMPUTER_VISION_API_KEY = '' #https://westeurope.api.cognitive.microsoft.com/vis
 FACE_API_KEY = '' #https://westeurope.api.cognitive.microsoft.com/face/v1.0
 TEXT_API_KEY = '' #https://westus.api.cognitive.microsoft.com/text/analytics/v2.0
 
-
+# BD Connection #
 URI_MONGODB = ''
+# Temp Folder #
 RUTA_BASE_EJECUCIONES = ''
