@@ -15,7 +15,6 @@ from datos.RepoVariables import RepoVariables
 from datos.RepoEventos import RepoEventos
 from LogSodin import LogSodin
 
-@unittest.skip("Proveedor desactivado")
 class Test_CHCantabrico(unittest.TestCase):
 
     @classmethod
@@ -42,7 +41,7 @@ class Test_CHCantabrico(unittest.TestCase):
 
     def test_conexion_chcantabrico(self):
         try:
-            conexion_ok = self.Chc.hay_conexion('HTTP', self.Chc.cfg_proveedor.URL)
+            conexion_ok = self.Chc.hay_conexion('HTTP', self.Chc.cfg_proveedor.URL_NIVEL)
         except IOError:
             self.fail("Error conectando con proveedor CHC")
 
@@ -51,7 +50,7 @@ class Test_CHCantabrico(unittest.TestCase):
         variable_deteccion = self.repo_variables.obtener_variable_por_nombre(self.Chc.cfg_proveedor.VARIABLE_DETECCION)
         (parametros, ruta_completa) = self.Chc.preparar_descarga(estacion_test['id'], variable_deteccion['codigo'])
         ruta_carpeta = ruta_completa[:ruta_completa.rfind('\\')]
-        conexion = requests.get(self.Chc.cfg_proveedor.URL, parametros, verify=False)
+        conexion = requests.get(self.Chc.cfg_proveedor.URL_NIVEL, parametros, verify=False)
         self.assertTrue(conexion.status_code == httplib.OK)
         self.assertTrue(os.path.exists(ruta_carpeta))
 
@@ -67,7 +66,7 @@ class Test_CHCantabrico(unittest.TestCase):
         variable_deteccion = self.repo_variables.obtener_variable_por_nombre(self.Chc.cfg_proveedor.VARIABLE_DETECCION)
         (parametros, ruta_completa) = self.Chc.preparar_descarga(estacion_test['id'], variable_deteccion['codigo'])
 
-        url_rota = self.Chc.cfg_proveedor.URL.replace('.es', '.com')
+        url_rota = self.Chc.cfg_proveedor.URL_NIVEL.replace('.es', '.com')
         with self.assertRaises(IOError):
             requests.get(url_rota, parametros, verify=False)
 

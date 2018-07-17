@@ -18,7 +18,7 @@ from utiles.Utilidades import Utilidades as util
 from LogSodin import LogSodin
 from bson import ObjectId
 
-@unittest.skip("pruebas de integración completas de eventos fluviales y costeros")
+#@unittest.skip("pruebas de integración completas de eventos fluviales y costeros")
 class Test_Integracion(unittest.TestCase):
 
     @classmethod

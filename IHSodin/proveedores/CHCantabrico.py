@@ -6,6 +6,7 @@ import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from proveedores.configuracion import config_chc
 from proveedores.ProveedorSAIH import ProveedorSAIH
+from utiles.Utilidades import Utilidades as util
 
 class CHCantabrico(ProveedorSAIH):
     """Clase para trabajar con datos procedentes de las estaciones SAI de la CHC"""
@@ -24,18 +25,26 @@ class CHCantabrico(ProveedorSAIH):
         return medida
 
     def descargar_csv_con_variable(self, id_estacion, cod_variable):
-        (parametros_peticion, ruta_local) = self.preparar_descarga(id_estacion, cod_variable)
-        return self.descarga_csv(parametros_peticion, ruta_local)
+        (url, ruta_local) = self.preparar_descarga(id_estacion, cod_variable)
+        return self.descarga_csv(url, ruta_local)
 
     def preparar_descarga(self, id_estacion, cod_variable):
         '''Compone los parametros de la peticion y la ruta de destino y devuelve una tupla con ambos'''
-        parametros = self.crear_parametros_peticion(id_estacion, cod_variable)
+        #parametros = self.crear_parametros_peticion(id_estacion, cod_variable)
+        url = self.crear_url_peticion(id_estacion, cod_variable)
         ruta_compuesta = os.path.join(self.cfg.RUTA_BASE_EJECUCIONES, self.cfg.CARPETA_DESCARGAS, self.tipo_proveedor())
         ruta_local = self.destino_descarga(ruta_compuesta, id_estacion)
-        return (parametros, ruta_local)
+        return (url, ruta_local)
+
+    def crear_url_peticion(self, id_estacion, cod_variable):
+        '''Prepara la peticion componiendo la url'''
+        if (cod_variable == self.cfg_proveedor.COD_NIVEL):
+            return os.path.join(self.cfg_proveedor.URL_NIVEL, id_estacion)
+        if (cod_variable == self.cfg_proveedor.COD_PRECIPITACION):
+            return os.path.join(self.cfg_proveedor.URL_PRECIPITACION, id_estacion)        
 
     def crear_parametros_peticion(self, id_estacion, cod_variable):
-        '''Prepara la peticion componiendo un objecto con los parametros dinámicos'''
+        '''Prepara la peticion componiendo un objeto con los parametros dinámicos'''
         parametros = {
             self.cfg_proveedor.PARAMETROS[0]: id_estacion,
             self.cfg_proveedor.PARAMETROS[1]: cod_variable,
@@ -43,10 +52,10 @@ class CHCantabrico(ProveedorSAIH):
             }
         return parametros
 
-    def descarga_csv(self, parametros_peticion, destino):
+    def descarga_csv(self, url, destino):
         '''Descarga el fichero csv desde un origen externo a un destino local'''
         try:
-            csv_datos = requests.get(self.cfg_proveedor.URL, params=parametros_peticion, verify=False)
+            csv_datos = requests.get(url, verify=False)
             if not csv_datos.content:
                 raise ValueError(u'La petición ha devuelto una cadena vacía.')
 
@@ -61,7 +70,8 @@ class CHCantabrico(ProveedorSAIH):
             with open(ruta_fichero, 'rb') as fichero:
                 lector = csv.reader(fichero, delimiter=';')
                 fila_ultima_medida = self.leer_csv(lector)
-                nueva_medida = self.crear_medida_saih(id_estacion, codigo_variable, fila_ultima_medida[0],
+                fecha_formateada = util.cambiar_formato_fecha(fila_ultima_medida[0], self.cfg_proveedor.FORMATO_FECHA)
+                nueva_medida = self.crear_medida_saih(id_estacion, codigo_variable, fecha_formateada,
                                                       fila_ultima_medida[1])
                 fichero.close()
             return nueva_medida
