@@ -103,7 +103,8 @@ class Test_CHCantabrico(unittest.TestCase):
         else:
             #Si no hay ningún evento activo, crear uno fake
             coordinador = CoordinadorEvento(cfg, self.log)
-            evento_test = coordinador.crear_evento(estacion_test['id'], tipo_fluvial['codigo'])
+            toponimos = coordinador.crear_lista_toponimos(estacion_test)
+            evento_test = coordinador.crear_evento(estacion_test['id'], tipo_fluvial['codigo'], toponimos)
             res_evento = self.repo_eventos.insertar_evento(evento_test)
             self.assertIsNotNone(res_evento, 'No se ha insertado el evento en el que guardar la medida')
             id_evento = res_evento.inserted_id

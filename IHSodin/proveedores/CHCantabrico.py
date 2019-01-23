@@ -67,9 +67,8 @@ class CHCantabrico(ProveedorSAIH):
 
     def extraer_medida_de_csv(self, id_estacion, codigo_variable, ruta_fichero):
         try:
-            with open(ruta_fichero, 'rb') as fichero:
-                lector = csv.reader(fichero, delimiter=';')
-                fila_ultima_medida = self.leer_csv(lector)
+            with open(ruta_fichero, 'rb') as fichero:                
+                fila_ultima_medida = self.leer_csv_reverse(fichero)               
                 fecha_formateada = util.cambiar_formato_fecha(fila_ultima_medida[0], self.cfg_proveedor.FORMATO_FECHA)
                 nueva_medida = self.crear_medida_saih(id_estacion, codigo_variable, fecha_formateada,
                                                       fila_ultima_medida[1])
@@ -78,8 +77,16 @@ class CHCantabrico(ProveedorSAIH):
         except IOError:
             raise IOError('Error leyendo fichero csv')
 
+    def leer_csv_reverse(self, fichero):
+        # última medida = último registro
+        lector = csv.reader(fichero, delimiter=';')
+        data = [r for r in lector]
+        fila_ultima_medida = data[-1]
+        return fila_ultima_medida
+        
     def leer_csv(self, lector):
+        # última medida = primer registro
         for _ in range(self.cfg_proveedor.FILAS_CABECERA): #Saltar las filas de la cabecera
-            next(lector)
+            next(lector)        
         fila_ultima_medida = next(lector)
         return fila_ultima_medida
