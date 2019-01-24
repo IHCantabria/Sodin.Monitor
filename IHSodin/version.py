@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
 '''Modulo de versión'''
-__version__ = '1.9'
+__version__ = '2.0'
