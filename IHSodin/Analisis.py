@@ -131,6 +131,7 @@ class Analisis(object):
             'fecha_creacion': tweet.get('created_at'),
             'verified': tweet.get('user').get('verified'),
             'account': tweet.get('user').get('screen_name')
+            #todo: guardar si tiene enlaces o no. links:true
             }
 
     def procesar_medidas(self, medidas):
