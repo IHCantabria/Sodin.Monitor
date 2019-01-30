@@ -132,7 +132,8 @@ class Twitter(object):
         loc_fecha_inicio = utc.localize(fecha_inicio_evento)
 
         for tweet in tweets:
-            try:                
+            try: 
+                #todo: filtrar tweets duplicados (revisar ids)
                 fecha_tweet = parser.parse(tweet['created_at'])
                 if any(re.search(r'\s' + toponimo, tweet['text']) for toponimo in evento['toponimos']) and fecha_tweet > loc_fecha_inicio:
                     tweets_filtrados.append(tweet)
